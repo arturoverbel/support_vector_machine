@@ -12,7 +12,9 @@ def example(num_samples=10, num_features=2, grid_size=20, filename="svm.pdf"):
                         .reshape(num_samples, num_features))
     labels = 2 * (samples.sum(axis=1) > 0) - 1.0
 
+    print('datasets:')
     print(samples)
+    print('Labels:')
     print(labels)
     trainer = svmpy.SVMTrainer(svmpy.Kernel.linear(), 0.1)
     predictor = trainer.train(samples, labels)

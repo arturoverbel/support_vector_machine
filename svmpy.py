@@ -59,6 +59,7 @@ class SVMTrainer(object):
         n_samples, n_features = X.shape
 
         K = self._gram_matrix(X)
+        print(K)
         # Solves
         # min 1/2 x^T P x + q^T x
         # s.t.

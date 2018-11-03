@@ -12,7 +12,7 @@ s = set()
 for val in target:
     s.add(val)
 s = list(s)
-rows = list(range(100,150))
+rows = list(range(100, 150))
 df = df.drop(df.index[rows])
 
 x = df['SepalLengthCm']
@@ -46,7 +46,7 @@ y_train = []
 x_test = []
 y_test = []
 
-porcent = 90
+porcent = 10
 
 x_train, x_test, y_train, y_test = train_test_split(X, Y, train_size=porcent/100)
 
@@ -67,6 +67,9 @@ train_f2 = train_f2.reshape(porcent, 1)
 w1 = np.zeros((porcent, 1))
 w2 = np.zeros((porcent, 1))
 
+print(w1)
+print(train_f1)
+print(w1*train_f1)
 epochs = 1
 alpha = 0.0001
 
