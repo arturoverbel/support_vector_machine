@@ -11,8 +11,8 @@ num_features=2
 samples = np.matrix(np.random.normal(size=num_samples * num_features).reshape(num_samples, num_features))
 labels = 2 * (samples.sum(axis=1) > 0) - 1.0
 
-point_x = samples[:,0]
-point_y = samples[:,1]
+point_x = samples[:, 0]
+point_y = samples[:, 1]
 
 labelss = np.hstack(labels)
 
