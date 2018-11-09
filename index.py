@@ -12,9 +12,9 @@ FEATURE_TARGET = 'Species'
 CLASS_A = 'Iris-setosa'
 CLASS_B = 'Iris-versicolor'
 
-FILE_NAME = 'iris.csv'
+FILE_NAME = 'iris_missing_values.csv'
 
-#Set data from file
+# Set data from file
 df = pd.read_csv(FILE_NAME)
 target = df[FEATURE_TARGET]
 
@@ -34,8 +34,10 @@ max_x_plot = 0
 
 for idx, val in enumerate(target):
     is_data_set = False
+    if x[idx] == '?' or y[idx] == '?':
+        print('Missing data: (', x[idx], ', ', y[idx], ', ', val, ')')
+        continue
     if val == CLASS_A:
-        Y.append(-1)
         classA_x.append(x[idx])
         classA_y.append(y[idx])
         is_data_set = True
@@ -43,8 +45,8 @@ for idx, val in enumerate(target):
             min_x_plot = x[idx]
         if x[idx] > max_x_plot:
             max_x_plot = x[idx]
+        Y.append(-1)
     elif val == CLASS_B:
-        Y.append(1)
         classB_x.append(x[idx])
         classB_y.append(y[idx])
         is_data_set = True
@@ -52,11 +54,12 @@ for idx, val in enumerate(target):
             min_x_plot = x[idx]
         if x[idx] > max_x_plot:
             max_x_plot = x[idx]
+        Y.append(1)
 
     if is_data_set:
         X.append([x[idx], y[idx]])
 
-## Shuffle and split the data into training and test set
+# Shuffle and split the data into training and test set
 X, Y = shuffle(X, Y)
 x_train = []
 y_train = []
@@ -67,32 +70,41 @@ porcent = 90
 
 x_train, x_test, y_train, y_test = train_test_split(X, Y, train_size=porcent/100)
 
-data_train = np.array(x_train) #Example data
-label_train = np.array(y_train) #Label
+len_total = len(X)
+len_dataset_train = len(x_train)
+
+# Example data
+data_train = np.array(x_train)
+# Label
+label_train = np.array(y_train)
 data_test = np.array(x_test)
 label_test = np.array(y_test)
 
-label_train = label_train.reshape(porcent, 1)
-label_test = label_test.reshape(100-porcent, 1)
+label_train = label_train.reshape(len_dataset_train, 1)
+label_test = label_test.reshape(len_total-len_dataset_train, 1)
 
 data_train_x = data_train[:, 0]
 data_train_y = data_train[:, 1]
 
-data_train_x = data_train_x.reshape(porcent, 1)
-data_train_y = data_train_y.reshape(porcent, 1)
+data_train_x = data_train_x.reshape(len_dataset_train, 1)
+data_train_y = data_train_y.reshape(len_dataset_train, 1)
 
-w1 = np.zeros((porcent, 1))
-w2 = np.zeros((porcent, 1))
+w1 = np.zeros((len_dataset_train, 1))
+w2 = np.zeros((len_dataset_train, 1))
 
 epochs = 1
 alpha = 0.0001
 
-while (epochs < 10000):
-    y = w1 * data_train_x + w2 * data_train_y
+print(len(w1))
+print(len(w2))
+print(len(data_train_x))
+print(len(data_train_y))
+while epochs < 10000:
+    y = (w1 * data_train_x) + (w2 * data_train_y)
     prod = y * label_train
     count = 0
     for val in prod:
-        if (val >= 1):
+        if val >= 1:
             cost = 0
             w1 = w1 - alpha * (2 * 1 / epochs * w1)
             w2 = w2 - alpha * (2 * 1 / epochs * w2)
@@ -104,18 +116,18 @@ while (epochs < 10000):
         count += 1
     epochs += 1
 
-index = list(range(100-porcent, porcent))
+index = list(range(len_total-len_dataset_train, len_dataset_train))
 w1 = np.delete(w1, index)
 w2 = np.delete(w2, index)
 
-w1 = w1.reshape(100-porcent, 1)
-w2 = w2.reshape(100-porcent, 1)
+w1 = w1.reshape(len_total-len_dataset_train, 1)
+w2 = w2.reshape(len_total-len_dataset_train, 1)
 
 data_test_x = data_test[:, 0]
 data_test_y = data_test[:, 1]
 
-data_test_x = data_test_x.reshape(100-porcent, 1)
-data_test_y = data_test_y.reshape(100-porcent, 1)
+data_test_x = data_test_x.reshape(len_total-len_dataset_train, 1)
+data_test_y = data_test_y.reshape(len_total-len_dataset_train, 1)
 
 ## Predict
 y_pred = w1 * data_test_x + w2 * data_test_y
