@@ -5,8 +5,8 @@ from sklearn.cross_validation import train_test_split
 from sklearn.metrics import accuracy_score
 import numpy as np
 
-FEATURE1 = 'SepalWidthCm'
-FEATURE2 = 'PetalWidthCm'
+FEATURE1 = 'SepalLengthCm'
+FEATURE2 = 'PetalLengthCm'
 
 FEATURE_TARGET = 'Species'
 CLASS_A = 'Iris-setosa'
@@ -29,6 +29,9 @@ classA_y = []
 classB_x = []
 classB_y = []
 
+min_x_plot = np.inf
+max_x_plot = 0
+
 for idx, val in enumerate(target):
     is_data_set = False
     if val == CLASS_A:
@@ -36,11 +39,19 @@ for idx, val in enumerate(target):
         classA_x.append(x[idx])
         classA_y.append(y[idx])
         is_data_set = True
+        if x[idx] < min_x_plot:
+            min_x_plot = x[idx]
+        if x[idx] > max_x_plot:
+            max_x_plot = x[idx]
     elif val == CLASS_B:
         Y.append(1)
         classB_x.append(x[idx])
         classB_y.append(y[idx])
         is_data_set = True
+        if x[idx] < min_x_plot:
+            min_x_plot = x[idx]
+        if x[idx] > max_x_plot:
+            max_x_plot = x[idx]
 
     if is_data_set:
         X.append([x[idx], y[idx]])
@@ -97,9 +108,6 @@ index = list(range(100-porcent, porcent))
 w1 = np.delete(w1, index)
 w2 = np.delete(w2, index)
 
-print(w1)
-print(w2)
-
 w1 = w1.reshape(100-porcent, 1)
 w2 = w2.reshape(100-porcent, 1)
 
@@ -120,7 +128,17 @@ for val in y_pred:
 
 print("Precisión: ", accuracy_score(y_test, predictions) * 100, "%")
 
+since = int(min_x_plot)-1
+until = int(max_x_plot)+2
+range_to_plot = range(since, until)
+
+
+def func_lineal(a, b, xx):
+    return ((a*-1.0) / b) * xx
+
+
 plt.figure(figsize=(8, 6))
 plt.scatter(classA_x, classA_y, marker='+', color='blue')
 plt.scatter(classB_x, classB_y, marker='_', color='red')
+plt.plot(range_to_plot, [func_lineal(w1[0], w2[0], i) for i in range_to_plot])
 plt.show()
