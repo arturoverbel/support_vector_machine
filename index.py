@@ -32,32 +32,46 @@ classB_y = []
 min_x_plot = np.inf
 max_x_plot = 0
 
+classA_missing = []
+classB_missing = []
+
 for idx, val in enumerate(target):
     is_data_set = False
+
     if x[idx] == '?' or y[idx] == '?':
         print('Missing data: (', x[idx], ', ', y[idx], ', ', val, ')')
+        if val == CLASS_A:
+            classA_missing.append([x[idx], y[idx]])
+        elif val == CLASS_B:
+            classB_missing.append([x[idx], y[idx]])
         continue
+
+    data_x = float(x[idx])
+    data_y = float(y[idx])
     if val == CLASS_A:
-        classA_x.append(x[idx])
-        classA_y.append(y[idx])
+        classA_x.append(data_x)
+        classA_y.append(data_y)
         is_data_set = True
-        if x[idx] < min_x_plot:
-            min_x_plot = x[idx]
-        if x[idx] > max_x_plot:
-            max_x_plot = x[idx]
+        if data_x < min_x_plot:
+            min_x_plot = data_x
+        if data_x > max_x_plot:
+            max_x_plot = data_x
         Y.append(-1)
     elif val == CLASS_B:
-        classB_x.append(x[idx])
-        classB_y.append(y[idx])
+        classB_x.append(data_x)
+        classB_y.append(data_y)
         is_data_set = True
-        if x[idx] < min_x_plot:
-            min_x_plot = x[idx]
+        if data_x < min_x_plot:
+            min_x_plot = data_x
         if x[idx] > max_x_plot:
-            max_x_plot = x[idx]
+            max_x_plot = data_x
         Y.append(1)
 
     if is_data_set:
-        X.append([x[idx], y[idx]])
+        X.append([data_x, data_y])
+
+print(classA_missing)
+print(classB_missing)
 
 # Shuffle and split the data into training and test set
 X, Y = shuffle(X, Y)
@@ -95,10 +109,6 @@ w2 = np.zeros((len_dataset_train, 1))
 epochs = 1
 alpha = 0.0001
 
-print(len(w1))
-print(len(w2))
-print(len(data_train_x))
-print(len(data_train_y))
 while epochs < 10000:
     y = (w1 * data_train_x) + (w2 * data_train_y)
     prod = y * label_train
@@ -149,8 +159,8 @@ def func_lineal(a, b, xx):
     return ((a*-1.0) / b) * xx
 
 
-plt.figure(figsize=(8, 6))
-plt.scatter(classA_x, classA_y, marker='+', color='blue')
-plt.scatter(classB_x, classB_y, marker='_', color='red')
-plt.plot(range_to_plot, [func_lineal(w1[0], w2[0], i) for i in range_to_plot])
-plt.show()
+#plt.figure(figsize=(8, 6))
+#plt.scatter(classA_x, classA_y, marker='+', color='blue')
+#plt.scatter(classB_x, classB_y, marker='_', color='red')
+#plt.plot(range_to_plot, [func_lineal(w1[0], w2[0], i) for i in range_to_plot])
+#plt.show()
