@@ -5,7 +5,7 @@ from sklearn.cross_validation import train_test_split
 from sklearn.metrics import accuracy_score
 import numpy as np
 
-FEATURE1 = 'SepalLengthCm'
+FEATURE1 = 'SepalWidthCm'
 FEATURE2 = 'PetalLengthCm'
 
 FEATURE_TARGET = 'Species'
@@ -63,7 +63,7 @@ for idx, val in enumerate(target):
         is_data_set = True
         if data_x < min_x_plot:
             min_x_plot = data_x
-        if x[idx] > max_x_plot:
+        if data_x > max_x_plot:
             max_x_plot = data_x
         Y.append(1)
 
@@ -75,12 +75,28 @@ if len(classA_missing) > 0:
     for data_missing in classA_missing:
         if data_missing[0] == '?':
             data_missing[0] = np.mean(classA_x)
+            print(data_missing[0])
         else:
             data_missing[1] = np.mean(classA_y)
+            print(data_missing[1])
 
         classA_x.append(data_missing[0])
         classA_y.append(data_missing[1])
         X.append([data_missing[0], data_missing[1]])
+        Y.append(1)
+
+    for data_missing in classB_missing:
+        if data_missing[0] == '?':
+            data_missing[0] = np.mean(classB_x)
+            print(data_missing[0])
+        else:
+            data_missing[1] = np.mean(classB_y)
+            print(data_missing[1])
+
+        classB_x.append(data_missing[0])
+        classB_y.append(data_missing[1])
+        X.append([data_missing[0], data_missing[1]])
+        Y.append(-1)
 
 print(classB_missing)
 
@@ -165,13 +181,15 @@ since = int(min_x_plot)-1
 until = int(max_x_plot)+2
 range_to_plot = range(since, until)
 
+# 45,5.1,3.8,1.9,0.4,Iris-setosa
+
 
 def func_lineal(a, b, xx):
     return ((a*-1.0) / b) * xx
 
 
-#plt.figure(figsize=(8, 6))
-#plt.scatter(classA_x, classA_y, marker='+', color='blue')
-#plt.scatter(classB_x, classB_y, marker='_', color='red')
-#plt.plot(range_to_plot, [func_lineal(w1[0], w2[0], i) for i in range_to_plot])
-#plt.show()
+plt.figure(figsize=(8, 6))
+plt.scatter(classA_x, classA_y, marker='+', color='blue')
+plt.scatter(classB_x, classB_y, marker='_', color='red')
+plt.plot(range_to_plot, [func_lineal(w1[0], w2[0], i) for i in range_to_plot])
+plt.show()
