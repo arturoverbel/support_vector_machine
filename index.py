@@ -71,6 +71,17 @@ for idx, val in enumerate(target):
         X.append([data_x, data_y])
 
 print(classA_missing)
+if len(classA_missing) > 0:
+    for data_missing in classA_missing:
+        if data_missing[0] == '?':
+            data_missing[0] = np.mean(classA_x)
+        else:
+            data_missing[1] = np.mean(classA_y)
+
+        classA_x.append(data_missing[0])
+        classA_y.append(data_missing[1])
+        X.append([data_missing[0], data_missing[1]])
+
 print(classB_missing)
 
 # Shuffle and split the data into training and test set
